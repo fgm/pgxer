@@ -1,54 +1,75 @@
 package pgxer
 
 import (
+	basePgconn "github.com/jackc/pgconn"
+	baseStmtCache "github.com/jackc/pgconn/stmtcache"
+
 	"github.com/fgm/pgxer/pgconn"
+	"github.com/fgm/pgxer/stmtcache"
 )
 
-type connConfig struct{}
+type ConcretConnConfig struct{}
 
-func (cc *connConfig) Config() pgconn.Config {
+func (cc *ConcretConnConfig) Config() pgconn.Config {
+	// FIXME implement
 	return nil
 }
 
-func (cc *connConfig) SetConfig(config pgconn.Config) ConnConfig {
+func (cc *ConcretConnConfig) SetConfig(config pgconn.Config) ConnConfig {
+	// FIXME implement
 	return nil
 }
 
-func (cc *connConfig) BuildStatementCache() BuildStatementCacheFunc {
+func (cc *ConcretConnConfig) BuildStatementCache() BuildStatementCacheFunc {
+	// FIXME implement
 	return nil
 }
 
-func (cc *connConfig) Logger() Logger {
+func (cc *ConcretConnConfig) Logger() Logger {
+	// FIXME implement
 	return nil
 }
-func (cc *connConfig) LogLevel() LogLevel {
+func (cc *ConcretConnConfig) LogLevel() LogLevel {
+	// FIXME implement
 	return LogLevelNone
 }
 
-func (cc *connConfig) PreferSimpleProtocol() bool {
+func (cc *ConcretConnConfig) PreferSimpleProtocol() bool {
+	// FIXME implement
 	return false
 }
 
-func (cc *connConfig) SetBuildStatementCache(BuildStatementCacheFunc) ConnConfig {
+func (cc *ConcretConnConfig) SetBuildStatementCache(BuildStatementCacheFunc) ConnConfig {
+	// FIXME implement
 	return nil
 }
 
-func (cc *connConfig) SetLogger(Logger) ConnConfig {
+func (cc *ConcretConnConfig) SetLogger(Logger) ConnConfig {
+	// FIXME implement
 	return nil
 }
 
-func (cc *connConfig) SetLogLevel(LogLevel) ConnConfig {
+func (cc *ConcretConnConfig) SetLogLevel(LogLevel) ConnConfig {
+	// FIXME implement
 	return nil
 }
 
-func (cc *connConfig) SetPreferSimpleProtocol(bool) ConnConfig {
+func (cc *ConcretConnConfig) SetPreferSimpleProtocol(bool) ConnConfig {
+	// FIXME implement
 	return nil
 }
 
-func (cc *connConfig) ConnString() string {
+func (cc *ConcretConnConfig) ConnString() string {
+	// FIXME implement
 	return ""
 }
 
-func (cc *connConfig) Copy() ConnConfig {
+func (cc *ConcretConnConfig) Copy() ConnConfig {
+	// FIXME implement
+	return nil
+}
+
+func BuildStatementCacheFromBaseBuildStatementCache(func(conn *basePgconn.PgConn) baseStmtCache.Cache) func(conn pgconn.PgConn) stmtcache.Cache {
+	// FIXME implement
 	return nil
 }

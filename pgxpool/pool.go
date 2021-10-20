@@ -4,8 +4,14 @@ import (
 	"context"
 	"time"
 
+	basePgxPool "github.com/jackc/pgx/v4/pgxpool"
+
 	"github.com/fgm/pgxer"
 	"github.com/fgm/pgxer/pgconn"
+)
+
+var (
+	DefaultConnection pgxer.Conn
 )
 
 type Config interface {
@@ -56,14 +62,47 @@ type Pool interface {
 	Ping(ctx context.Context) error
 }
 
-func Connect(ctx context.Context, connString string) (Pool, error) {
-	return nil, nil
+func Connect(ctx context.Context, connString string) (p Pool, err error) {
+	base, err := basePgxPool.Connect(ctx, connString)
+	return (*ConcretePool)(base), err
 }
 
 func ConnectConfig(ctx context.Context, config Config) (Pool, error) {
-	return nil, nil
+	baseConfig := &basePgxPool.Config{
+		AfterConnect:      BaseAfterConnectFromAfterConnect(config.AfterConnect),
+		AfterRelease:      BaseAfterReleaseFromAfterRelease(config.AfterRelease),
+		BeforeAcquire:     BaseBeforeAcquireFromBeforeAcquire(config.BeforeAcquire),
+		BeforeConnect:     BaseBeforeConnectFromBeforeConnect(config.BeforeConnect),
+		ConnConfig:        BaseConnConfigFromConnConfig(config.ConnConfig()),
+		HealthCheckPeriod: config.HealthCheckPeriod(),
+		LazyConnect:       config.LazyConnect(),
+		MaxConnIdleTime:   config.MaxConnIdleTime(),
+		MaxConnLifetime:   config.MaxConnLifetime(),
+		MaxConns:          config.MinConns(),
+		MinConns:          config.MinConns(),
+	}
+
+	base, err := basePgxPool.ConnectConfig(ctx, baseConfig)
+	return (*ConcretePool)(base), err
 }
 
 func ParseConfig(connString string) (Config, error) {
-	return nil, nil
+	baseConfig, err := basePgxPool.ParseConfig(connString)
+	if err != nil {
+		return nil, err
+	}
+	var config Config = &ConcreteConfig{}
+	config.
+		SetAfterConnect(AfterConnectFromBaseAfterConnect(baseConfig.AfterConnect)).
+		SetAfterRelease(AfterReleaseFromBaseAfterRelease(baseConfig.AfterRelease)).
+		SetBeforeAcquire(BeforeAcquireFromBaseBeforeAcquire(baseConfig.BeforeAcquire)).
+		SetBeforeConnect(BeforeConnectFromBaseBeforeConnect(baseConfig.BeforeConnect)).
+		SetConnConfig(ConnConfigFromBaseConnConfig(baseConfig.ConnConfig)).
+		SetHealthCheckPeriod(baseConfig.HealthCheckPeriod).
+		SetLazyConnect(baseConfig.LazyConnect).
+		SetMaxConnIdleTime(baseConfig.MaxConnIdleTime).
+		SetMaxConnLifetime(baseConfig.MaxConnLifetime).
+		SetMaxConns(baseConfig.MaxConns).
+		SetMinConns(baseConfig.MinConns)
+	return config, nil
 }
