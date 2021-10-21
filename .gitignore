@@ -1,5 +1,5 @@
-.idea
-go.sum
+/.env
+/.idea
+/bin/*
+!/bin/.gitkeep
 vendor
-bin/
-!bin/.gitkeep

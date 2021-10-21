@@ -33,3 +33,12 @@ For the simpler cases, just applying three changes should be sufficient, as the
 - Fields to equivalent getter/setter methods:
     - After `poolConfig, err := pgxpool.ParseConfig(os.Getenv("DATABASE_URL"))`
     - `poolConfig.ConnConfig.Logger = logger` -> `poolConfig.ConnConfig().SetLogger(logger)`
+
+## Using the demos
+
+- Assumes a PostgreSQL instance available without a password as `postgres://localhost/postgres`,
+  with the `psql` command available
+- Build the DB, the binaries, and install them as go executables:
+  - `make && make install`
+- After you are finished using them, remove the demo databases:
+  - `make clean`
