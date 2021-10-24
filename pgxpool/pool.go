@@ -68,18 +68,27 @@ func Connect(ctx context.Context, connString string) (p Pool, err error) {
 }
 
 func ConnectConfig(ctx context.Context, config Config) (Pool, error) {
-	baseConfig := &basePgxPool.Config{
-		AfterConnect:      BaseAfterConnectFromAfterConnect(config.AfterConnect),
-		AfterRelease:      BaseAfterReleaseFromAfterRelease(config.AfterRelease),
-		BeforeAcquire:     BaseBeforeAcquireFromBeforeAcquire(config.BeforeAcquire),
-		BeforeConnect:     BaseBeforeConnectFromBeforeConnect(config.BeforeConnect),
-		ConnConfig:        BaseConnConfigFromConnConfig(config.ConnConfig()),
-		HealthCheckPeriod: config.HealthCheckPeriod(),
-		LazyConnect:       config.LazyConnect(),
-		MaxConnIdleTime:   config.MaxConnIdleTime(),
-		MaxConnLifetime:   config.MaxConnLifetime(),
-		MaxConns:          config.MinConns(),
-		MinConns:          config.MinConns(),
+	baseConfig, err := basePgxPool.ParseConfig("")
+	if err != nil {
+		return nil, err
+	}
+	baseConfig.AfterConnect = BaseAfterConnectFromAfterConnect(config.AfterConnect)
+	baseConfig.AfterRelease = BaseAfterReleaseFromAfterRelease(config.AfterRelease)
+	baseConfig.BeforeAcquire = BaseBeforeAcquireFromBeforeAcquire(config.BeforeAcquire)
+	baseConfig.BeforeConnect = BaseBeforeConnectFromBeforeConnect(config.BeforeConnect)
+	baseConfig.ConnConfig = BaseConnConfigFromConnConfig(config.ConnConfig())
+	baseConfig.HealthCheckPeriod = config.HealthCheckPeriod()
+	baseConfig.LazyConnect = config.LazyConnect()
+	baseConfig.MaxConnIdleTime = config.MaxConnIdleTime()
+	baseConfig.MaxConnLifetime = config.MaxConnLifetime()
+	baseConfig.MaxConns = config.MaxConns()
+	baseConfig.MinConns = config.MinConns()
+
+	if baseConfig.MaxConns <= 0 {
+		baseConfig.MaxConns = 1
+	}
+	if baseConfig.HealthCheckPeriod <= 0 {
+		baseConfig.HealthCheckPeriod = 1 * time.Second
 	}
 
 	base, err := basePgxPool.ConnectConfig(ctx, baseConfig)

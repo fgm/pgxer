@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Examples: URL shortener" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="pgxer" />
+    <working_directory value="$PROJECT_DIR$" />
+    <envs>
+      <env name="DATABASE_URL" value="postgres://localhost/pgxer_url_shortener" />
+    </envs>
+    <kind value="PACKAGE" />
+    <package value="github.com/fgm/pgxer/examples/url_shortener" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/examples/todo/main.go" />
+    <method v="2" />
+  </configuration>
+</component>

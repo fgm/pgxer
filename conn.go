@@ -3,8 +3,9 @@ package pgxer
 import (
 	"context"
 
+	basePgconn "github.com/jackc/pgconn"
 	"github.com/jackc/pgproto3/v2"
-	"github.com/jackc/pgx/v4"
+	basePgx "github.com/jackc/pgx/v4"
 
 	"github.com/fgm/pgxer/pgconn"
 	"github.com/fgm/pgxer/stmtcache"
@@ -52,28 +53,58 @@ type ConnConfig interface {
 	Copy() ConnConfig
 }
 
-type Identifier = pgx.Identifier
+type Identifier = basePgx.Identifier
 
 type QueryFuncRow interface {
 	FieldDescriptions() []pgproto3.FieldDescription
 	RawValues() [][]byte
 }
 
-type QueryResultFormats = pgx.QueryResultFormats
-type QueryResultFormatsByOID = pgx.QueryResultFormatsByOID
-type QuerySimpleProtocol = pgx.QuerySimpleProtocol
+type QueryResultFormats = basePgx.QueryResultFormats
+type QueryResultFormatsByOID = basePgx.QueryResultFormatsByOID
+type QuerySimpleProtocol = basePgx.QuerySimpleProtocol
 
 func Connect(ctx context.Context, connString string) (Conn, error) {
-	return nil, nil
+	bc, err := basePgx.Connect(ctx, connString)
+	return (*ConcreteConn)(bc), err
 }
 
 func ConnectConfig(ctx context.Context, connConfig ConnConfig) (Conn, error) {
-	return nil, nil
+	pgcc := connConfig.Config()
+	cc := &basePgx.ConnConfig{
+		Config: basePgconn.Config{
+			Host:            pgcc.Host(),
+			Port:            pgcc.Port(),
+			Database:        pgcc.Database(),
+			User:            pgcc.User(),
+			Password:        pgcc.Password(),
+			TLSConfig:       pgcc.TLSConfig(),
+			ConnectTimeout:  pgcc.ConnectTimeout(),
+			DialFunc:        pgcc.DialFunc(),
+			LookupFunc:      pgcc.LookupFunc(),
+			BuildFrontend:   baseBuildFrontendFromBuildFrontend(pgcc.BuildFrontend()),
+			RuntimeParams:   pgcc.RuntimeParams(),
+			Fallbacks:       baseFallbacksFromFallbacks(pgcc.Fallbacks()),
+			ValidateConnect: baseValidateConnectFromValidateConnect(pgcc.ValidateConnect()),
+			AfterConnect:    baseAfterConnectFromAfterConnect(pgcc.AfterConnect()),
+			OnNotice:        baseOnNoticeFromOnNotice(pgcc.OnNotice()),
+			OnNotification:  baseOnNotificationFromOnNotification(pgcc.OnNotification()),
+		},
+		Logger:               connConfig.Logger(),
+		LogLevel:             connConfig.LogLevel(),
+		BuildStatementCache:  nil,
+		PreferSimpleProtocol: connConfig.PreferSimpleProtocol(),
+	}
+	bc, err := basePgx.ConnectConfig(ctx, cc)
+	return (*ConcreteConn)(bc), err
+
 }
 
 func ParseConfig(connString string) (ConnConfig, error) {
-	return nil, nil
+	baseCC, err := basePgx.ParseConfig(connString)
+	cc := &ConcreteConnConfig{ConnConfig: baseCC}
+	return cc, err
 }
 
-var ErrNoRows = pgx.ErrNoRows
-var ErrInvalidLogLevel = pgx.ErrInvalidLogLevel
+var ErrNoRows = basePgx.ErrNoRows
+var ErrInvalidLogLevel = basePgx.ErrInvalidLogLevel

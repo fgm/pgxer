@@ -6,32 +6,33 @@ import (
 	basePgxPool "github.com/jackc/pgx/v4/pgxpool"
 
 	"github.com/fgm/pgxer"
+	"github.com/fgm/pgxer/internal"
 	"github.com/fgm/pgxer/pgconn"
 )
 
 type ConcreteConn basePgxPool.Conn
 
 func (cc *ConcreteConn) Begin(ctx context.Context) (pgxer.Tx, error) {
-	return nil, errUnimplemented
+	return nil, internal.ErrUnimplemented
 }
 
 func (cc *ConcreteConn) BeginFunc(ctx context.Context, f func(pgxer.Tx) error) error {
-	return errUnimplemented
+	return internal.ErrUnimplemented
 }
 
 func (cc *ConcreteConn) BeginTx(ctx context.Context, txOptions pgxer.TxOptions) (pgxer.Tx, error) {
-	return nil, errUnimplemented
+	return nil, internal.ErrUnimplemented
 }
 
 func (cc *ConcreteConn) BeginTxFunc(ctx context.Context, txOptions pgxer.TxOptions, f func(pgxer.Tx) error) error {
-	return errUnimplemented
+	return internal.ErrUnimplemented
 }
 func (cc *ConcreteConn) Conn() pgxer.Conn {
 	return (*pgxer.ConcreteConn)((*basePgxPool.Conn)(cc).Conn())
 }
 
 func (cc *ConcreteConn) CopyFrom(ctx context.Context, tableName pgxer.Identifier, columnNames []string, rowSrc pgxer.CopyFromSource) (int64, error) {
-	return 0, errUnimplemented
+	return 0, internal.ErrUnimplemented
 }
 
 func (cc *ConcreteConn) Exec(ctx context.Context, sql string, arguments ...interface{}) (pgconn.CommandTag, error) {
@@ -40,15 +41,15 @@ func (cc *ConcreteConn) Exec(ctx context.Context, sql string, arguments ...inter
 }
 
 func (cc *ConcreteConn) Ping(ctx context.Context) error {
-	return errUnimplemented
+	return internal.ErrUnimplemented
 }
 
 func (cc *ConcreteConn) Query(ctx context.Context, sql string, args ...interface{}) (pgxer.Rows, error) {
-	return nil, errUnimplemented
+	return nil, internal.ErrUnimplemented
 }
 
 func (cc *ConcreteConn) QueryFunc(ctx context.Context, sql string, args []interface{}, scans []interface{}, f func(row pgxer.QueryFuncRow) error) (pgconn.CommandTag, error) {
-	return nil, errUnimplemented
+	return nil, internal.ErrUnimplemented
 }
 
 func (cc *ConcreteConn) QueryRow(ctx context.Context, sql string, args ...interface{}) pgxer.Row {

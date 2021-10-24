@@ -3,12 +3,15 @@ package pgxer
 import (
 	basePgconn "github.com/jackc/pgconn"
 	baseStmtCache "github.com/jackc/pgconn/stmtcache"
+	basePgx "github.com/jackc/pgx/v4"
 
 	"github.com/fgm/pgxer/pgconn"
 	"github.com/fgm/pgxer/stmtcache"
 )
 
-type ConcreteConnConfig struct{}
+type ConcreteConnConfig struct {
+	*basePgx.ConnConfig
+}
 
 func (cc *ConcreteConnConfig) Config() pgconn.Config {
 	// FIXME implement
@@ -71,5 +74,29 @@ func (cc *ConcreteConnConfig) Copy() ConnConfig {
 
 func BuildStatementCacheFromBaseBuildStatementCache(func(conn *basePgconn.PgConn) baseStmtCache.Cache) func(conn pgconn.PgConn) stmtcache.Cache {
 	// FIXME implement
+	return nil
+}
+
+func baseBuildFrontendFromBuildFrontend(frontend pgconn.BuildFrontendFunc) basePgconn.BuildFrontendFunc {
+	return nil
+}
+
+func baseFallbacksFromFallbacks([]pgconn.FallbackConfig) []*basePgconn.FallbackConfig {
+	return nil
+}
+
+func baseValidateConnectFromValidateConnect(connect pgconn.ValidateConnectFunc) basePgconn.ValidateConnectFunc {
+	return nil
+}
+
+func baseAfterConnectFromAfterConnect(connect pgconn.AfterConnectFunc) basePgconn.AfterConnectFunc {
+	return nil
+}
+
+func baseOnNoticeFromOnNotice(notice pgconn.NoticeHandler) basePgconn.NoticeHandler {
+	return nil
+}
+
+func baseOnNotificationFromOnNotification(notification pgconn.NotificationHandler) basePgconn.NotificationHandler {
 	return nil
 }

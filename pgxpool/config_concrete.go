@@ -8,6 +8,7 @@ import (
 	basePgxPool "github.com/jackc/pgx/v4/pgxpool"
 
 	"github.com/fgm/pgxer"
+	"github.com/fgm/pgxer/internal"
 )
 
 type ConcreteConfig struct {
@@ -16,7 +17,7 @@ type ConcreteConfig struct {
 
 func (c *ConcreteConfig) ConnConfig() pgxer.ConnConfig {
 	// FIXME implement
-	return nil
+	return &pgxer.ConcreteConnConfig{}
 }
 
 func (c *ConcreteConfig) SetConnConfig(config pgxer.ConnConfig) Config {
@@ -26,7 +27,7 @@ func (c *ConcreteConfig) SetConnConfig(config pgxer.ConnConfig) Config {
 
 func (c *ConcreteConfig) AfterConnect(context.Context, pgxer.Conn) error {
 	// FIXME implement
-	return errUnimplemented
+	return internal.ErrUnimplemented
 }
 func (c *ConcreteConfig) AfterRelease(pgxer.Conn) bool {
 	// FIXME implement
@@ -38,26 +39,26 @@ func (c *ConcreteConfig) BeforeAcquire(context.Context, pgxer.Conn) bool {
 }
 func (c *ConcreteConfig) BeforeConnect(context.Context, pgxer.ConnConfig) error {
 	// FIXME implement
-	return errUnimplemented
+	return internal.ErrUnimplemented
 }
 
 func (c *ConcreteConfig) SetAfterConnect(func(context.Context, pgxer.Conn) error) Config {
 	// FIXME implement
-	return nil
+	return c
 }
 func (c *ConcreteConfig) SetAfterRelease(func(pgxer.Conn) bool) Config {
 	// FIXME implement
-	return nil
+	return c
 }
 
 func (c *ConcreteConfig) SetBeforeAcquire(func(context.Context, pgxer.Conn) bool) Config {
 	// FIXME implement
-	return nil
+	return c
 }
 
 func (c *ConcreteConfig) SetBeforeConnect(func(context.Context, pgxer.ConnConfig) error) Config {
 	// FIXME implement
-	return nil
+	return c
 }
 
 func (c *ConcreteConfig) HealthCheckPeriod() time.Duration {
@@ -87,37 +88,38 @@ func (c *ConcreteConfig) MinConns() int32 {
 
 func (c *ConcreteConfig) SetHealthCheckPeriod(time.Duration) Config {
 	// FIXME implement
-	return nil
+	return c
 }
 
 func (c *ConcreteConfig) SetLazyConnect(bool) Config {
 	// FIXME implement
-	return nil
+	return c
 }
 
 func (c *ConcreteConfig) SetMaxConnIdleTime(time.Duration) Config {
 	// FIXME implement
-	return nil
+	return c
 }
 
 func (c *ConcreteConfig) SetMaxConnLifetime(time.Duration) Config {
 	// FIXME implement
-	return nil
+	return c
 }
 
 func (c *ConcreteConfig) SetMaxConns(int32) Config {
 	// FIXME implement
-	return nil
+	return c
 }
 
 func (c *ConcreteConfig) SetMinConns(int32) Config {
 	// FIXME implement
-	return nil
+	return c
 }
 
 func BaseConnConfigFromConnConfig(c pgxer.ConnConfig) *basePgx.ConnConfig {
 	// FIXME implement
-	return nil
+	cc, _ := basePgx.ParseConfig("")
+	return cc
 }
 
 func BaseAfterConnectFromAfterConnect(func(context.Context, pgxer.Conn) error) func(context.Context, *basePgx.Conn) error {

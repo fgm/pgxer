@@ -52,8 +52,8 @@ func (c *ConcreteConn) Deallocate(ctx context.Context, name string) error {
 }
 
 func (c *ConcreteConn) Exec(ctx context.Context, sql string, arguments ...interface{}) (pgconn.CommandTag, error) {
-	// TODO implement me
-	panic("implement me")
+	ct, err := (*basePgx.Conn)(c).Exec(ctx, sql, arguments...)
+	return pgconn.CommandTag(ct), err
 }
 
 func (c *ConcreteConn) IsClosed() bool {
@@ -77,8 +77,8 @@ func (c *ConcreteConn) Prepare(ctx context.Context, name, sql string) (sd pgconn
 }
 
 func (c *ConcreteConn) Query(ctx context.Context, sql string, args ...interface{}) (Rows, error) {
-	// TODO implement me
-	panic("implement me")
+	baseRows, err := (*basePgx.Conn)(c).Query(ctx, sql, args...)
+	return ConcreteRows{Rows: baseRows}, err
 }
 
 func (c *ConcreteConn) QueryFunc(ctx context.Context, sql string, args []interface{}, scans []interface{}, f func(QueryFuncRow) error) (pgconn.CommandTag, error) {

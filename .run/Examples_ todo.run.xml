@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Examples: todo list" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="pgxer" />
+    <working_directory value="$PROJECT_DIR$" />
+    <parameters value="list" />
+    <envs>
+      <env name="DATABASE_URL" value="postgres://localhost/pgxer_todo" />
+    </envs>
+    <kind value="PACKAGE" />
+    <package value="github.com/fgm/pgxer/examples/todo" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/examples/todo/main.go" />
+    <method v="2" />
+  </configuration>
+</component>
