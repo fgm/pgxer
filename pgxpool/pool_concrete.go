@@ -15,9 +15,10 @@ type ConcretePool basePgxPool.Pool
 var errUnimplemented = errors.New("Unimplemented")
 
 func (p *ConcretePool) Acquire(ctx context.Context) (Conn, error) {
-	// FIXME implement
-	return nil, errUnimplemented
+	bc, err := (*basePgxPool.Pool)(p).Acquire(ctx)
+	return (*ConcreteConn)(bc), err
 }
+
 func (p *ConcretePool) AcquireFunc(ctx context.Context, f func(conn Conn) error) error {
 	// FIXME implement
 	return errUnimplemented
@@ -35,8 +36,8 @@ func (p *ConcretePool) Stat() Stat {
 	return nil
 }
 func (p *ConcretePool) Exec(ctx context.Context, sql string, arguments ...interface{}) (pgconn.CommandTag, error) {
-	// FIXME implement
-	return nil, errUnimplemented
+	ct, err := (*basePgxPool.Pool)(p).Exec(ctx, sql, arguments...)
+	return pgconn.CommandTag(ct), err
 }
 func (p *ConcretePool) Query(ctx context.Context, sql string, args ...interface{}) (pgxer.Rows, error) {
 	// FIXME implement
